@@ -11,6 +11,11 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    'modules' => [
+        'user' => [
+            'class' => 'frontend\modules\user\Module',
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
@@ -42,6 +47,7 @@ return [
             'rules' => [
                 '' => 'site/index',                                
                 '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
+                'profile/<nickname:\w+>' => 'user/profile/view',
             ],
         ],
     ],
