@@ -11,6 +11,7 @@ use dosamigos\fileupload\FileUpload;
 
 ?>
 
+
 <h3><?php echo Html::encode($user->username); ?></h3>
 <p><?php echo HtmlPurifier::process($user->about); ?></p>
 <hr>
@@ -44,13 +45,14 @@ use dosamigos\fileupload\FileUpload;
     <hr/>
 
 <?php else: ?>
-
+<?php if ($currentUser && !$user->equals($currentUser)): ?>
+    <?php if (!$currentUser->isFollowing($user)): ?>
     <a href="<?php echo Url::to(['/user/profile/subscribe', 'id' => $user->getId()]); ?>" class="btn btn-info">Subscribe</a>
-    <a href="<?php echo Url::to(['/user/profile/unsubscribe', 'id' => $user->getId()]); ?>" class="btn btn-info">Unsubscribe</a>
-
+        <?php else: ?>
+        <a href="<?php echo Url::to(['/user/profile/unsubscribe', 'id' => $user->getId()]); ?>" class="btn btn-info">Unsubscribe</a>
+    <?php endif; ?>
     <hr>
 
-    <?php if ($currentUser): ?>
         <h5>Friends, who are also following <?php echo Html::encode($user->username); ?>: </h5>
         <div class="row">
             <?php foreach ($currentUser->getMutualSubscriptionsTo($user) as $item): ?>
@@ -62,8 +64,7 @@ use dosamigos\fileupload\FileUpload;
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
-
-<?php endif; ?>
+<?php endif;?>
 
 <hr>
 

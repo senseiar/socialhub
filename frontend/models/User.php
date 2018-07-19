@@ -286,17 +286,27 @@ class User extends ActiveRecord implements IdentityInterface
         $ids = $redis->sinter($key1, $key2);
         return User::find()->select('id, username, nickname')->where(['id' => $ids])->orderBy('username')->asArray()->all();
     }
-
     /**
      * Get profile picture
      * @return string
      */
     public function getPicture()
     {
-        if ($this->picture) {
+        if ($this->picture)
+        {
             return Yii::$app->storage->getFile($this->picture);
         }
         return self::DEFAULT_IMAGE;
+    }
+
+    /**
+     * Whether current user is following given user
+     * @return boolean
+     */
+    public function isFollowing(User $user)
+    {
+        $redis = Yii::$app->redis;
+        return (bool) $redis->sismember("user:{$this->getId()}:subscriptions", $user->getId());
     }
 
 }
