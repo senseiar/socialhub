@@ -11,7 +11,6 @@ use dosamigos\fileupload\FileUpload;
 
 ?>
 
-
 <h3><?php echo Html::encode($user->username); ?></h3>
 <p><?php echo HtmlPurifier::process($user->about); ?></p>
 <hr>
@@ -19,6 +18,8 @@ use dosamigos\fileupload\FileUpload;
 <img src="<?php echo $user->getPicture(); ?>" id="profile-picture" />
 
 <?php if ($currentUser->equals($user)): ?>
+
+    <hr>
 
     <div class="alert alert-success display-none" id="profile-image-success">Profile image updated</div>
     <div class="alert alert-danger display-none" id="profile-image-fail"></div>
@@ -42,17 +43,18 @@ use dosamigos\fileupload\FileUpload;
 
         ],
     ]); ?>
+
+    <a href="<?php echo Url::to(['/user/profile/delete-picture']); ?>" class="btn btn-danger">Delete picture</a>
     <hr/>
 
-<?php else: ?>
-<?php if ($currentUser && !$user->equals($currentUser)): ?>
-    <?php if (!$currentUser->isFollowing($user)): ?>
+<?php /*else: */?>
+
     <a href="<?php echo Url::to(['/user/profile/subscribe', 'id' => $user->getId()]); ?>" class="btn btn-info">Subscribe</a>
-        <?php else: ?>
-        <a href="<?php echo Url::to(['/user/profile/unsubscribe', 'id' => $user->getId()]); ?>" class="btn btn-info">Unsubscribe</a>
-    <?php endif; ?>
+    <a href="<?php echo Url::to(['/user/profile/unsubscribe', 'id' => $user->getId()]); ?>" class="btn btn-info">Unsubscribe</a>
+
     <hr>
 
+    <?php if ($currentUser): ?>
         <h5>Friends, who are also following <?php echo Html::encode($user->username); ?>: </h5>
         <div class="row">
             <?php foreach ($currentUser->getMutualSubscriptionsTo($user) as $item): ?>
@@ -64,7 +66,8 @@ use dosamigos\fileupload\FileUpload;
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
-<?php endif;?>
+
+<?php endif; ?>
 
 <hr>
 
